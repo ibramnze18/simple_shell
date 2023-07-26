@@ -7,15 +7,15 @@
  */
 int _myexit(info_t *info)
 {
-	int exitnum;
+	int exitcheck;
 
-	if (info->argv[1])
+	if (info->argv[1]) /* If there is an exit arguement */
 	{
-		exitnum = _erratoi(info->argv[1]);
-		if (exitnum == -1)
+		exitcheck = _erratoi(info->argv[1]);
+		if (exitcheck == -1)
 		{
 			info->status = 2;
-			print_error(info, "wrong number: ");
+			print_error(info, "Illegal number: ");
 			_eputs(info->argv[1]);
 			_eputchar('\n');
 			return (1);
@@ -34,32 +34,32 @@ int _myexit(info_t *info)
  */
 int _mycd(info_t *info)
 {
-	char *str, *directory, buffer[1024];
+	char *s, *dir, buffer[1024];
 	int chdir_ret;
 
-	str = getcwd(buffer, 1024);
-	if (!str)
+	s = getcwd(buffer, 1024);
+	if (!s)
 		_puts("TODO: >>getcwd failure emsg here<<\n");
 	if (!info->argv[1])
 	{
-		directory = _getenv(info, "HOME=");
-		if (!directory)
+		dir = _getenv(info, "HOME=");
+		if (!dir)
 			chdir_ret =
-				chdir((dir = _getenv(info, "PWD=")) ? directory : "/");
+				chdir((dir = _getenv(info, "PWD=")) ? dir : "/");
 		else
-			chdir_ret = chdir(directory);
+			chdir_ret = chdir(dir);
 	}
 	else if (_strcmp(info->argv[1], "-") == 0)
 	{
 		if (!_getenv(info, "OLDPWD="))
 		{
-			_puts(str);
+			_puts(s);
 			_putchar('\n');
 			return (1);
 		}
 		_puts(_getenv(info, "OLDPWD=")), _putchar('\n');
 		chdir_ret =
-			chdir((directory = _getenv(info, "OLDPWD=")) ? directory : "/");
+			chdir((dir = _getenv(info, "OLDPWD=")) ? dir : "/");
 	}
 	else
 		chdir_ret = chdir(info->argv[1]);
@@ -75,7 +75,6 @@ int _mycd(info_t *info)
 	}
 	return (0);
 }
-
 /**
  * _myhelp - A func that changes the process current directory
  * @info: Structure containing potential arguments. Used to maintain
